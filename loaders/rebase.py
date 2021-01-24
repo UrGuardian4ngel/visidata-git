@@ -26,6 +26,29 @@ class RebaseTodoSheet(TableSheet):
 
             yield Commit.from_line(line)
 
+    @property
+    def command_choices(self):
+        return [
+            {'key': 'pick', 'desc': 'use commit'},
+            {'key': 'reword', 'desc': 'use commit, but edit the commit message'},
+            {'key': 'edit', 'desc': 'use commit, but stop for amending'},
+            {'key': 'squash', 'desc': 'use commit, but meld into previous commit'},
+            {'key': 'fixup', 'desc': 'like "squash", but discard this commit\'s log message'},
+            {'key': 'exec',
+                'desc': 'run command (the rest of the line) using shell'},
+            {'key': 'break',
+                'desc': 'stop here (continue rebase later with "git rebase --continue")'},
+            {'key': 'drop', 'desc': 'remove commit'},
+            {'key': 'label', 'desc': 'label current HEAD with a name'},
+            {'key': 'reset', 'desc': 'reset HEAD to a label'},
+            {'key': 'merge', 'desc': 'create a merge commit using the original merge commit''s message'},
+        ]
+
+
+RebaseTodoSheet.addCommand('x', 'set-command',
+                           'cursorCol.setValuesTyped(selectedRows or [cursorRow], chooseOne(command_choices))',
+                           'cycle through available commands')
+
 
 class Commit(object):
     commit = ''
